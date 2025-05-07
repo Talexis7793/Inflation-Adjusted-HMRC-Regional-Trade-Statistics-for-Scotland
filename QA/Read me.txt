@@ -1,0 +1,3 @@
+this directory contains time series graphs for all series - every partner location broken down by commodity can be available (if these breakdowns are selected in the scipts). 
+
+The graphs are sorted by whether they show a series with a large difference between the original and seasonally adjusted values, and whether they have a large coefficient of variation or not. The large cv folder within the two sub-folders contains graphs for series with a CV larger than the threshold (see code) for either the netmass of value series. The smaller cv folder contains the remaining series. Any other series' graphs which have not been output into one of these 2 folders had only NA values (ie it's a blank series with no trade) so can be ignored. 
