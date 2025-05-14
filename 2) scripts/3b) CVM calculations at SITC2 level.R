@@ -28,11 +28,21 @@ if(use_sa == TRUE) {
           if(country_breakdown == TRUE){
             
                 if(country_product_breakdown == TRUE){
+                  if(single_country == FALSE){
                     current_price_values <- read_csv(paste0("QA/CP SA - UK & Scotland - dest country & product breakdown - ",data_date," post QA of SA.csv")) %>%
                       select(-value, -netmass) %>%
                       rename(value = value_sa,
                              netmass = netmass_sa)
                     output_file <- paste0("3) outputs/CVM SITC2 - SA - UK & Scotland - dest country & product breakdown - ",data_date, " (Generated ", as.character(Sys.Date()),").csv")
+                  }
+                  if(single_country != FALSE){
+                    current_price_values <- read_csv(paste0("QA/CP SA - UK & Scotland - ", single_country, " product breakdown - ",data_date," post QA of SA.csv")) %>%
+                      select(-value, -netmass) %>%
+                      rename(value = value_sa,
+                             netmass = netmass_sa)
+                    output_file <- paste0("3) outputs/CVM SITC2 - SA - UK & Scotland - dest country & product breakdown - ",data_date, " (Generated ", as.character(Sys.Date()),").csv")
+                  }
+                  
                 }
                 
                 if(country_product_breakdown == FALSE){

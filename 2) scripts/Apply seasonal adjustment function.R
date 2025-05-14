@@ -98,7 +98,7 @@ apply_seasonal_adjustment <- function(input_data,
     current_price_values_ts <- ts(current_price_values_filt, 
                                   start = c(startyr,1), 
                                   frequency = ind_freq)   #indicator frequency: 4=quarterly, 12=monthly
-    
+  
     #perform seasonal adjustment
 
     adjust_seasonal <- function(ts_data, 
@@ -124,6 +124,7 @@ apply_seasonal_adjustment <- function(input_data,
                                 #access the model rather than manually accessing it by e.g. turning it into a DF which I do later here)
                                 
                                 #seed=TRUE)
+                                
                                 #Might want to consider the xreg argument to seas(). Using a helper function genhol() and passing in holiday names, you are able to seasonally adjust for specific holidays, e.g:
                                 xreg = covid_ts #This marks the pandemic as an exogenous variable to consider, adding another component to the model to decompose. It is separate from the usual seasonal component.
                                       #> seas(iip,

@@ -38,15 +38,26 @@ if(use_sa == TRUE) {
                 current_price_values <- read_csv(paste0("QA/CP SA - UK & Scotland - dest country breakdown - ",data_date," post QA of SA.csv")) %>%
                   select(-value, -netmass) %>%
                   rename(value = value_sa,
-                         netmass = netmass_sa)
+                         netmass = netmass_sa) %>% 
+                  #filter out trade for countries that have been found to be erratic
+                  mutate(flow_partner = paste(partner, flowtype)) %>% 
+                  filter(!(flow_partner %in% partner_erratics)) %>% 
+                  select(-flow_partner)
+                
                 output_file <- paste0("3) outputs/CVM - SA - UK & Scotland - dest country breakdown - ",data_date, " (Generated ", as.character(Sys.Date()),").csv")
             }
             
             if(country_product_breakdown == TRUE){
+              
               current_price_values <- read_csv(paste0("QA/CP SA - UK & Scotland - dest country & product breakdown - ",data_date," post QA of SA.csv")) %>%
                 select(-value, -netmass) %>%
                 rename(value = value_sa,
-                       netmass = netmass_sa)
+                       netmass = netmass_sa) %>% 
+              #filter out trade for countries that have been found to be erratic
+                mutate(flow_partner = paste(partner, flowtype)) %>% 
+                filter(!(flow_partner %in% partner_erratics)) %>% 
+                select(-flow_partner)
+              
               output_file <- paste0("3) outputs/CVM - SA - UK & Scotland - dest country & product breakdown - ",data_date, " (Generated ", as.character(Sys.Date()),").csv")
             }
     }
@@ -135,25 +146,6 @@ pyp_series_t_trade <- pyp_series_disagg %>% ungroup() %>%
          flowtype = "Trade",
          partner = "World") 
 
-# Exports from Scotland to a particular country
-if(country_breakdown == TRUE) {
-
-pyp_series_top_country <- pyp_series_disagg %>% 
-    filter(country == "Scotland",
-            partner == top_country,
-           flowtype == "Exports")
-  
-pyp_series_top_country <- pyp_series_top_country %>% ungroup() %>%
-  aggregate_pyp(value = "value",
-                filter_on = "ProductCode",
-                filter_to = all_excl_erratic_sitc3,
-                group_vars = c("date", "country", "flowtype", "ProductCode")) %>%
-  mutate(agg = ProductCode,
-         partner = top_country) %>% 
-  select(-ProductCode)
-
-}
-
 ####################################################################################################
 #24/9/24 there is interest in how trade is doing when we exclude drink, I'm adding this code in case we ever want to exlude additional product(s) in future  
 if(exclude_drink == TRUE){
@@ -221,19 +213,11 @@ pyp_series_all <- rbind(pyp_series_part_flow,
                         pyp_series_trade,
                         pyp_series_t_trade,
                         pyp_series_sitc1,
-                        pyp_series_sitc1_eu,
-                        pyp_series_top_country)
+                        pyp_series_sitc1_eu)
 
-# remove dataframes to clean
-rm(pyp_series_part_flow,
-   pyp_series, 
-   pyp_series_trade,
-   pyp_series_t_trade,
-   pyp_series_sitc1,
-   pyp_series_sitc1_eu,
-   pyp_series_top_country
-)
-}
+
+  }
+
 
 if(country_breakdown == FALSE){
   pyp_series_all <- rbind(pyp_series_part_flow,
@@ -243,15 +227,16 @@ if(country_breakdown == FALSE){
                           pyp_series_sitc1,
                           pyp_series_sitc1_eu)
   
-  # remove dataframes to clean
-  rm(pyp_series_part_flow,
-     pyp_series, 
-     pyp_series_trade,
-     pyp_series_t_trade,
-     pyp_series_sitc1,
-     pyp_series_sitc1_eu
-  )
 }
+
+# remove dataframes to clean
+rm(pyp_series_part_flow,
+   pyp_series, 
+   pyp_series_trade,
+   pyp_series_t_trade,
+   pyp_series_sitc1,
+   pyp_series_sitc1_eu
+)
 
 if(exclude_drink == TRUE){
   pyp_series_all <- rbind(pyp_series_all, 

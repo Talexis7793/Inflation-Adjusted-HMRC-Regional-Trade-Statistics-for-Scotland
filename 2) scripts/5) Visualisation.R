@@ -1,31 +1,12 @@
 ##### Visualisation #####
 
-# Basic graphs for use in Powerpoint
-
 # Template
 # remotes::install_github(
 #   "DataScienceScotland/sgplot",
 #   upgrade = "never"
 # )
 
-###########################################################################################
-#User input required: visualisation:
-use_sa <- TRUE #Use seasonally adjusted data?
-all_uk <- FALSE #Use the breakdown for each UK nation or just UK v Scotland?
-file_date <- "2025-03-17"  #Enter the date the file was generated (IMPORTANT FOR SELECTING THE RIGHT INPUT)
-data_date = "2023Q4" #Enter the latest quarter you are working with (keep format to yyyyqq)
-quarter_want = "Q4" #This is just the current quarter
-#comparison_year <- 2018 # this will control where the horizontal line for the average in the comparison year appears - not currently used
-save_switch = TRUE
-
-#Reindex to year - this will make all CVM values relative to this base year (NOTE THIS IS YEAR ENDING IN THE CURRENT QUARTER, NOT CALENDAR YEAR). Set to FALSE if you do not want to reindex
-reindex_year <- year_want
-
-#Used in labels:
-erratic <- c("66","68", "79", "93", "97")
 #############################################################################################
-
-library(tidyverse)
 library(sgplot)
 #############################################################################################
 
@@ -57,8 +38,6 @@ if(use_sa == TRUE) {
   }
 }
 
-#Load chart functions
-source("./2) scripts/1) Packages.R")
 
 #############################################################################################
 

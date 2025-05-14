@@ -38,8 +38,15 @@ if(all_uk == FALSE) {
   if(country_breakdown == TRUE) {
     
     if(country_product_breakdown == TRUE) {
-      current_price_values <- read_csv(paste0("1) data/raw/RTS UK and Scotland - dest country & product breakdown - ", data_date, api_suffix, ".csv"))
-      output_file <- paste0("3) outputs/CP SA - UK & Scotland - dest country & product breakdown - ",data_date, ".csv")
+      if(single_country == FALSE) {
+        current_price_values <- read_csv(paste0("1) data/raw/RTS UK and Scotland - dest country & product breakdown - ", data_date, api_suffix, ".csv")) %>% 
+          filter(country != "UK") #Remove UK if we are looking this granular
+        output_file <- paste0("3) outputs/CP SA - UK & Scotland - dest country & product breakdown - ",data_date, ".csv")
+      }
+      if(single_country != FALSE){
+        current_price_values <- read_csv(paste0("1) data/raw/RTS ", region_choice, " - ", single_country, " product breakdown - ",data_date,".csv"))
+        output_file <- paste0("3) outputs/CP SA - ", region_choice, " - ", single_country," product breakdown - ",data_date, ".csv")
+      }
     }
     if(country_product_breakdown == FALSE) { 
       current_price_values <- read_csv(paste0("1) data/raw/RTS UK and Scotland - dest country breakdown - ", data_date, api_suffix, ".csv"))
@@ -80,7 +87,7 @@ earliest_date_in_data <- paste(year(min(current_price_values$date)),".",month(mi
 #also need to add code to toggle whether this is on or off (see email from ONS specialists):
 list_quarters_post_covid <- unique(current_price_values$date)
 list_quarters_post_covid <- list_quarters_post_covid[ format(list_quarters_post_covid, "%Y") > 2021]
-number_of_quarters_post_covid <- length(list_quarters_post_covid)
+number_of_quarters_post_covid <- length(list_quarters_post_covid) + 4 #adding 4 because we need another year to account for the forecast in the seasonal adjustment
 
 covid <- c(rep(0, times = 12), rep(1, times = 12), rep(0, times = number_of_quarters_post_covid))
 covid_ts <- ts(covid,

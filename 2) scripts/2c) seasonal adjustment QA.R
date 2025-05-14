@@ -171,10 +171,16 @@ current_price_sa_output <- current_price_sa_output %>%
 #using regex just to remove some characters from the string so we can alter the file name appropriately
 if(write_to_csv == TRUE){write_csv(current_price_sa_output, paste0("./QA/", sub("^.*?/", "", sub("\\..*", "", output_file)), " post QA of SA.csv"))}
 
+#print results to console
 print("The following value series could be problematic: ") 
-problem_value_series_list
+for (series in problem_value_series_list) {
+  print(series)
+}
+
 print("The following netmass series could be problematic: ") 
-problem_netmass_series_list
+for (series in problem_netmass_series_list) {
+  print(series)
+}
 
 #calculate run time
 end_time <- Sys.time()
